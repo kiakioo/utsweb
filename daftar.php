@@ -1,5 +1,25 @@
+<?php
+$isSubmitted = isset($_POST['submit']);
+$username    = trim($_POST['username'] ?? '');
+$password    = $_POST['password'] ?? '';
+$umur        = isset($_POST['umur']) ? (int)$_POST['umur'] : null;
+$kota        = trim($_POST['kota'] ?? '');
+
+$hasAllFields = $isSubmitted && $username !== '' && $password !== '' && $kota !== '' && $umur !== null;
+
+$USERNAME_VALID = "MOCHAMAD IDRIS";
+$PASSWORD_VALID = "070605";
+$authOk = (strtoupper($username) === strtoupper($USERNAME_VALID)) && ($password === $PASSWORD_VALID);
+
+$umurValid = $hasAllFields ? ($umur >= 10) : false;
+
+$namaTampil = strtoupper($username);
+$kotaTampil = strtoupper($kota);
+?>
+<!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>::Data Registrasi::</title>
         <style type="text/css">
             body{
@@ -25,15 +45,25 @@
             h1{
                 text-align: center;
                 color: #333;
-                margin-bottom: 30px;
+                margin-bottom: 20px;
                 font-size: 28px;
             }
             .success-message{
                 background-color: #d4edda;
                 color: #155724;
-                padding: 15px;
-                margin-bottom: 20px;
+                padding: 12px 14px;
+                margin-bottom: 18px;
                 border: 1px solid #c3e6cb;
+                border-radius: 5px;
+                text-align: center;
+                font-weight: bold;
+            }
+            .error-message{
+                background-color: #f8d7da;
+                color: #721c24;
+                padding: 12px 14px;
+                margin-bottom: 18px;
+                border: 1px solid #f5c6cb;
                 border-radius: 5px;
                 text-align: center;
                 font-weight: bold;
@@ -47,19 +77,18 @@
                 padding: 12px;
                 text-align: left;
                 border-bottom: 1px solid #ddd;
+                color: #333;
             }
             th{
                 background-color: #f8f9fa;
                 font-weight: bold;
-                color: #333;
-                width: 30%;
             }
-            td{
-                color: #666;
-            }
+            th:nth-child(1), td:nth-child(1){ width:70px; text-align:center; }
+            td:nth-child(3){ width:120px; }
+            td:nth-child(4){ width:160px; }
             .back-button{
                 text-align: center;
-                margin-top: 20px;
+                margin-top: 10px;
             }
             .back-button a{
                 background-color: #007bff;
@@ -78,22 +107,55 @@
     <body>
         <div class="container">
             <h1>Data Registrasi User</h1>
-            
-            <?php if (isset($_POST['submit'])): ?>
-                <div class="success-message">
-                    Registrasi Berhasil!
+
+            <?php if (!$hasAllFields): ?>
+                <div class="error-message">
+                    Error: Data tidak ditemukan. Silakan isi form registrasi terlebih dahulu.
                 </div>
-                
+                <div class="back-button"><a href="index.html">Kembali ke Form Registrasi</a></div>
+
+            <?php elseif (!$authOk): ?>
+                <div class="error-message">
+                    Username atau password salah.
+                </div>
+                <div class="back-button"><a href="index.html">Kembali ke Form Registrasi</a></div>
+
+            <?php elseif (!$umurValid): ?>
+                <div class="error-message">
+                    Error: Umur minimal adalah <strong>10</strong> tahun.
+                </div>
+                <div class="back-button"><a href="index.html">Kembali ke Form Registrasi</a></div>
+
+            <?php else: ?>
+                <div class="success-message">Registrasi Berhasil!</div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Lengkap</th>
+                            <th>Umur</th>
+                            <th>Asal Kota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        for ($i=1; $i <= $umur; $i++) {
+                            if ($i % 2 !== 0) continue;   // hanya genap
+                            if ($i == 4 || $i == 8) continue; // skip 4 & 8
+                            echo "<tr>";
+                            echo "<td>{$i}</td>";
+                            echo "<td>{$namaTampil}</td>";
+                            echo "<td>{$umur} tahun</td>";
+                            echo "<td>{$kotaTampil}</td>";
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
                 <div class="back-button">
                     <a href="index.html">Kembali ke Form Registrasi</a>
-                </div>
-            <?php else: ?>
-                <div style="text-align: center; color: #dc3545; padding: 20px;">
-                    <h3>Error: Data tidak ditemukan</h3>
-                    <p>Silakan isi form registrasi terlebih dahulu.</p>
-                    <div class="back-button">
-                        <a href="index.html">Kembali ke Form Registrasi</a>
-                    </div>
                 </div>
             <?php endif; ?>
         </div>
