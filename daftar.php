@@ -1,163 +1,82 @@
-<?php
-$isSubmitted = isset($_POST['submit']);
-$username    = trim($_POST['username'] ?? '');
-$password    = $_POST['password'] ?? '';
-$umur        = isset($_POST['umur']) ? (int)$_POST['umur'] : null;
-$kota        = trim($_POST['kota'] ?? '');
-
-$hasAllFields = $isSubmitted && $username !== '' && $password !== '' && $kota !== '' && $umur !== null;
-
-$USERNAME_VALID = "MOCHAMAD IDRIS";
-$PASSWORD_VALID = "070605";
-$authOk = (strtoupper($username) === strtoupper($USERNAME_VALID)) && ($password === $PASSWORD_VALID);
-
-$umurValid = $hasAllFields ? ($umur >= 10) : false;
-
-$namaTampil = strtoupper($username);
-$kotaTampil = strtoupper($kota);
-?>
-<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>::Data Registrasi::</title>
-        <style type="text/css">
-            body{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                min-height: 100vh;
-                background-size: cover;
-                background-image: url("https://cdn.arstechnica.net/wp-content/uploads/2023/06/bliss-update-1440x960.jpg");
-                font-family: Arial, Helvetica, sans-serif;
-                margin: 0;
-                padding: 20px;
-            }
-            .container{
-                background-color: white;
-                border: 3px solid grey;
-                padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                max-width: 600px;
-                width: 100%;
-            }
-            h1{
-                text-align: center;
-                color: #333;
-                margin-bottom: 20px;
-                font-size: 28px;
-            }
-            .success-message{
-                background-color: #d4edda;
-                color: #155724;
-                padding: 12px 14px;
-                margin-bottom: 18px;
-                border: 1px solid #c3e6cb;
-                border-radius: 5px;
-                text-align: center;
-                font-weight: bold;
-            }
-            .error-message{
-                background-color: #f8d7da;
-                color: #721c24;
-                padding: 12px 14px;
-                margin-bottom: 18px;
-                border: 1px solid #f5c6cb;
-                border-radius: 5px;
-                text-align: center;
-                font-weight: bold;
-            }
-            table{
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-            }
-            th, td{
-                padding: 12px;
-                text-align: left;
-                border-bottom: 1px solid #ddd;
-                color: #333;
-            }
-            th{
-                background-color: #f8f9fa;
-                font-weight: bold;
-            }
-            th:nth-child(1), td:nth-child(1){ width:70px; text-align:center; }
-            td:nth-child(3){ width:120px; }
-            td:nth-child(4){ width:160px; }
-            .back-button{
-                text-align: center;
-                margin-top: 10px;
-            }
-            .back-button a{
-                background-color: #007bff;
-                color: white;
-                padding: 12px 24px;
-                text-decoration: none;
-                border-radius: 5px;
-                display: inline-block;
-                transition: background-color 0.3s;
-            }
-            .back-button a:hover{
-                background-color: #0056b3;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Data Registrasi User</h1>
+<head>
+    <title>Data Registrasi User</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: url("https://i.pinimg.com/736x/e5/cf/2f/e5cf2faa5abb6eda8fd5cdda15f6714c.jpg");
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid grey;
+            width: 600px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th { background: #eee; }
+        .success { color: green; text-align: center; font-weight: bold; }
+        .error { color: red; text-align: center; font-weight: bold; }
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="box">
+    <h2 style="text-align:center;">Data Registrasi User</h2>
+    <?php
+        if(isset($_POST['submit'])){
+            $namaDepan = $_POST['nama_depan'];
+            $namaBelakang = $_POST['nama_belakang'];
+            $umur = $_POST['umur'];
+            $kota = $_POST['asal_kota'];
 
-            <?php if (!$hasAllFields): ?>
-                <div class="error-message">
-                    Error: Data tidak ditemukan. Silakan isi form registrasi terlebih dahulu.
-                </div>
-                <div class="back-button"><a href="index.html">Kembali ke Form Registrasi</a></div>
-
-            <?php elseif (!$authOk): ?>
-                <div class="error-message">
-                    Username atau password salah.
-                </div>
-                <div class="back-button"><a href="index.html">Kembali ke Form Registrasi</a></div>
-
-            <?php elseif (!$umurValid): ?>
-                <div class="error-message">
-                    Error: Umur minimal adalah <strong>10</strong> tahun.
-                </div>
-                <div class="back-button"><a href="index.html">Kembali ke Form Registrasi</a></div>
-
-            <?php else: ?>
-                <div class="success-message">Registrasi Berhasil!</div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Lengkap</th>
-                            <th>Umur</th>
-                            <th>Asal Kota</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        for ($i=1; $i <= $umur; $i++) {
-                            if ($i % 2 !== 0) continue;   // hanya genap
-                            if ($i == 4 || $i == 8) continue; // skip 4 & 8
-                            echo "<tr>";
-                            echo "<td>{$i}</td>";
-                            echo "<td>{$namaTampil}</td>";
-                            echo "<td>{$umur} tahun</td>";
-                            echo "<td>{$kotaTampil}</td>";
-                            echo "</tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
-
-                <div class="back-button">
-                    <a href="index.html">Kembali ke Form Registrasi</a>
-                </div>
-            <?php endif; ?>
-        </div>
-    </body>
+            if($umur < 10){
+                echo "<p class='error'>Umur minimal 10 tahun!</p>";
+                echo "<div style='text-align:center;'><a href='index.html' class='btn'>Kembali</a></div>";
+            } else {
+                echo "<p class='success'>Registrasi Berhasil!</p>";
+                echo "<table>
+                        <tr><th>No</th><th>Nama Lengkap</th><th>Umur</th><th>Asal Kota</th></tr>";
+                for($i=1; $i<=$umur; $i++){
+                    if($i % 2 == 0 && $i != 4 && $i != 8){
+                        echo "<tr>
+                                <td>$i</td>
+                                <td>".strtoupper($namaDepan.' '.$namaBelakang)."</td>
+                                <td>$umur tahun</td>
+                                <td>".strtoupper($kota)."</td>
+                              </tr>";
+                    }
+                }
+                echo "</table>";
+                echo "<div style='text-align:center;'><a href='index.html' class='btn'>Kembali</a></div>";
+            }
+        } else {
+            echo "<p class='error'>Data tidak ditemukan!</p>";
+            echo "<div style='text-align:center;'><a href='index.html' class='btn'>Kembali</a></div>";
+        }
+    ?>
+    </div>
+</body>
 </html>
